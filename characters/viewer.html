@@ -1,0 +1,226 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karakterler</title>
+<script type="importmap">{"imports":{"three":"./three/three.module.js","three/addons/":"./three/addons/"}}</script>
+<style>
+:root{--bg:#eef1f4;--ink:#1d2430;--muted:#5d6878;--card:#fff;--line:#d6dce3;--acc:#2f6fdb;--r:14px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;height:100vh;display:flex;flex-direction:column}
+#stage{flex:1;position:relative;min-height:0}
+#stage canvas{display:block;width:100%;height:100%;cursor:grab}
+#name{position:absolute;left:24px;top:18px;font-size:40px;font-weight:700}
+#info{position:absolute;left:24px;top:68px;color:var(--muted);font-size:18px}
+#load{position:absolute;inset:0;display:grid;place-items:center;font-size:22px;color:var(--muted)}
+#bar{background:var(--card);border-top:1px solid var(--line);padding:14px 16px;display:grid;gap:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lbl{width:110px;color:var(--muted);font-size:15px}
+button{font:inherit;font-size:17px;border:1px solid var(--line);background:#f7f9fb;color:var(--ink);border-radius:var(--r);padding:10px 16px;cursor:pointer}
+button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+@media (max-width:640px){.lbl{width:100%}#name{font-size:30px}}
+</style></head><body>
+<div id="stage"><div id="name"></div><div id="info"></div><div id="load">Yükleniyor…</div></div>
+<div id="bar">
+  <div class="row"><span class="lbl">Karakter</span><span id="chars" class="row"></span></div>
+  <div class="row"><span class="lbl">Hareket</span><span id="clips" class="row"></span></div>
+  <div class="row"><span class="lbl">Yüz</span>
+    <button id="talk">Konuş</button><button data-look="-1">Kendi sağına bak</button><button data-look="0" class="on">Karşıya bak</button><button data-look="1">Kendi soluna bak</button></div>
+  <div class="row"><span class="lbl">Kamera</span><button data-cam="body" class="on">Tam boy</button><button data-cam="face">Yüz</button></div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { addSkinDetail } from './skin-detail.js';
+
+const CHARS = { rb_m08: 'Mark', rb_f05: 'Kate', rb_f02: 'Anna', rb_f17: 'Mia', rb_m04: 'Leo', rb_m06: 'Ben' };
+const CLIPS = { stand_idle: 'Ayakta bekle', stand_talk: 'Ayakta konuş', walk: 'Yürü', sit_idle: 'Oturarak bekle', sit_talk: 'Oturarak konuş', sit_down: 'Otur', stand_up: 'Kalk' };
+let manifest = {};
+try { manifest = await (await fetch('manifest.json')).json(); }
+catch (e) { document.getElementById('load').textContent = 'Karakter listesi okunamadı. Sayfayı yenile.'; throw e; }
+
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;
+stage.prepend(renderer.domElement);
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xdfe5eb);
+// image based light: soft wrap-around reflections on skin, cloth and eyes
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture; scene.environmentIntensity = 0.55;
+scene.add(new THREE.HemisphereLight(0xfff4e8, 0x6b6458, 0.6));
+// key (warm, casts soft shadow), rim (cool, separates silhouette from background)
+const d = new THREE.DirectionalLight(0xfff1e0, 2.4); d.position.set(1.5, 3, 2.5); scene.add(d);
+d.castShadow = true; d.shadow.mapSize.set(1024, 1024); d.shadow.radius = 4; d.shadow.bias = -0.0004; d.shadow.normalBias = 0.02;
+Object.assign(d.shadow.camera, { left: -1.2, right: 1.2, top: 2.2, bottom: -0.3, near: 0.5, far: 8 });
+const d2 = new THREE.DirectionalLight(0xdfe9ff, 1.1); d2.position.set(-2, 2.2, -1.5); scene.add(d2);
+const floor = new THREE.Mesh(new THREE.CircleGeometry(2, 48), new THREE.MeshStandardMaterial({ color: 0xb9b6ac }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+const stool = new THREE.Mesh(new THREE.BoxGeometry(0.45, 1, 0.42), new THREE.MeshStandardMaterial({ color: 0x8b6a4a }));
+scene.add(stool); stool.visible = false;
+const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 50);
+
+const loader = new GLTFLoader(); loader.setMeshoptDecoder(MeshoptDecoder);
+const cache = {};
+let cur = null, mixer = null, action = null, clipName = 'stand_idle', talking = false, lookT = 0, look = 0, camMode = new URLSearchParams(location.search).get('cam') || 'body';
+let camSnap = true, yaw = 0.35, zoom = { body: 1, face: 1 }, prevAction = null;
+const camT = new THREE.Vector3(0, 0.85, 0), chainOff = new THREE.Vector3();
+let chainAct = null;
+const SEAT = { sit_idle: 0, sit_talk: 0, sit_down: 1, stand_up: 0 }; // 0 = first frame, 1 = last frame is seated
+
+function bone(root, n) { let b = null; root.traverse(o => { if (o.isBone && o.name === n) b = o; }); return b; }
+function morphs(root) { const m = []; root.traverse(o => { if (o.morphTargetDictionary) m.push(o); }); return m; }
+function setM(k, v) { for (const o of cur.m) { const i = o.morphTargetDictionary[k]; if (i !== undefined) o.morphTargetInfluences[i] = v; } }
+
+async function pick(n) {
+  const ld = document.getElementById('load');
+  ld.textContent = 'Yükleniyor…'; ld.style.display = 'grid';
+  if (!cache[n]) {
+    let g;
+    try { g = await loader.loadAsync(n + '.glb'); }
+    catch (e) { document.getElementById('load').textContent = CHARS[n] + ' açılamadı. Sayfayı yenile.'; return; }
+    g.scene.traverse(o => {
+      if (!o.isMesh) return;
+      o.frustumCulled = false; o.castShadow = true; o.receiveShadow = true;
+      const m = o.material, nm = (m.name || '').toLowerCase();
+      // skin: slightly glossy, sheen fakes the soft fuzz of real skin under grazing light
+      if (/body|head|m0\d\d_(body|head)/.test(nm) && !m.transparent) {
+        const p = new THREE.MeshPhysicalMaterial(); THREE.MeshStandardMaterial.prototype.copy.call(p, m);
+        Object.assign(p, { roughness: m.roughnessMap ? 1 : 0.52, sheen: 0.35, sheenRoughness: 0.8, sheenColor: new THREE.Color(0xffffff), sheenColorMap: m.map, specularIntensity: 0.5 });
+        // sheen tinted by the albedo: painted scalp hair stays dark instead of turning tan at grazing angles
+        o.material = p;
+        const pore = new URLSearchParams(location.search).get('pore');
+        if (/head/.test(nm) && pore !== '0') addSkinDetail(p, pore ? { strength: +pore } : undefined);
+      } else if (nm === 'eyes') { m.roughness = 0.05; m.envMapIntensity = 1.2; }
+      else if (m.alphaTest || m.transparent) {
+        o.castShadow = false;
+        // hair cutout: MSAA alpha-to-coverage turns the hard alphaTest edge into soft strands
+        if (m.alphaTest) { m.alphaToCoverage = true; m.alphaTest = 0.35; m.roughness = 0.85; m.envMapIntensity = 0.5; }
+        // flat hair cards catch grazing-angle reflections as bright lines; keep them matte
+      }
+    });
+    // body height from the bind pose frames the full-body camera
+    const box = new THREE.Box3().setFromObject(g.scene);
+    cache[n] = { g, m: morphs(g.scene), head: bone(g.scene, 'head'), neck: bone(g.scene, 'neck_01'), chest: bone(g.scene, 'spine_03'), pelvis: bone(g.scene, 'pelvis'), h: box.max.y - box.min.y };
+    g.scene.updateMatrixWorld(true); cache[n].rest = cache[n].pelvis.getWorldPosition(new THREE.Vector3());
+  }
+  if (cur) scene.remove(cur.g.scene);
+  cur = cache[n]; scene.add(cur.g.scene);
+  mixer = new THREE.AnimationMixer(cur.g.scene); action = null; prevAction = null;
+  // one-shot clips end mid-motion: blend into the matching idle
+  mixer.addEventListener('finished', e => { const nx = { sit_down: 'sit_idle', stand_up: 'stand_idle' }[e.action.getClip().name]; if (nx) play(nx, true); });
+  document.getElementById('name').textContent = CHARS[n];
+  cur.mb = manifest[n] ? (manifest[n].bytes / 1048576).toFixed(2).replace('.', ',') : '?';
+  ld.style.display = 'none';
+  mark('#chars button', b => b.dataset.c === n);
+  play(clipName);
+}
+function play(c, chained = false) {
+  clipName = c;
+  const clip = cur.g.animations.find(a => a.name === c);
+  const next = mixer.clipAction(clip);
+  // one-shot clips (sit down / stand up) stop on their last frame instead of looping
+  const once = c === 'sit_down' || c === 'stand_up';
+  next.setLoop(once ? THREE.LoopOnce : THREE.LoopRepeat, once ? 1 : Infinity); next.clampWhenFinished = once;
+  // stool fixed at the seated hip position (sampled from the clip), not following the hips
+  if (chained) {
+    // keep the hips where the one-shot left them: shift the root as the idle fades in
+    const e = cur.pelvis.getWorldPosition(new THREE.Vector3());
+    chainOff.set(e.x - cur.rest.x, 0, e.z - cur.rest.z); chainAct = next;
+    next.reset().play(); action.crossFadeTo(next, 0.5, false); action = next;
+    mark('#clips button', b => b.dataset.c === c); return;
+  }
+  chainAct = null;
+  stool.visible = c in SEAT;
+  if (stool.visible) {
+    mixer.stopAllAction(); next.reset().play(); next.time = SEAT[c] * clip.duration; mixer.update(0);
+    cur.g.scene.updateMatrixWorld(true);
+    const p = cur.pelvis.getWorldPosition(new THREE.Vector3()), sh = Math.max(0.05, p.y - 0.12);
+    stool.position.set(p.x, sh / 2, p.z); stool.scale.y = sh;
+    prevAction = null;
+  }
+  // 0.3 s blend from the previous clip instead of a hard jump
+  if (action && action !== next && !stool.visible) { next.reset().play(); action.crossFadeTo(next, 0.3, false); }
+  else next.reset().play();
+  action = next;
+  cur.g.scene.position.set(0, 0, 0);
+  document.getElementById('info').textContent = 'Dosya ' + cur.mb + ' MB · Hareket ' + clip.duration.toFixed(1).replace('.', ',') + ' sn';
+  mark('#clips button', b => b.dataset.c === c);
+}
+function mark(sel, f) { document.querySelectorAll(sel).forEach(b => b.classList.toggle('on', f(b))); }
+
+const ch = document.getElementById('chars');
+for (const [k, v] of Object.entries(CHARS)) { const b = document.createElement('button'); b.textContent = v; b.dataset.c = k; b.onclick = () => pick(k); ch.append(b); }
+const cl = document.getElementById('clips');
+for (const [k, v] of Object.entries(CLIPS)) { const b = document.createElement('button'); b.textContent = v; b.dataset.c = k; b.onclick = () => play(k); cl.append(b); }
+document.getElementById('talk').onclick = e => { talking = !talking; e.target.classList.toggle('on', talking); e.target.textContent = talking ? 'Sustur' : 'Konuş'; };
+document.querySelectorAll('[data-look]').forEach(b => b.onclick = () => { lookT = +b.dataset.look; mark('[data-look]', x => x === b); });
+document.querySelectorAll('[data-cam]').forEach(b => b.onclick = () => { camMode = b.dataset.cam; mark('[data-cam]', x => x === b); });
+
+// drag to turn around the character
+let drag = null;
+renderer.domElement.addEventListener('pointerdown', e => { drag = e.clientX; renderer.domElement.setPointerCapture(e.pointerId); });
+renderer.domElement.addEventListener('pointermove', e => { if (drag !== null) { yaw -= (e.clientX - drag) * 0.01; drag = e.clientX; } });
+renderer.domElement.addEventListener('pointerup', () => drag = null);
+renderer.domElement.addEventListener('pointercancel', () => drag = null);
+renderer.domElement.addEventListener('wheel', e => { e.preventDefault(); zoom[camMode] = Math.min(2, Math.max(0.4, zoom[camMode] + e.deltaY * 0.001)); }, { passive: false });
+
+// rotate bone b by world-space quaternion q (applied after animation)
+const _p = new THREE.Quaternion(), _w = new THREE.Quaternion();
+function worldRot(b, q) {
+  b.parent.getWorldQuaternion(_p);
+  _w.copy(_p).invert().multiply(q).multiply(_p);
+  b.quaternion.premultiply(_w);
+  b.updateMatrixWorld(true);
+}
+const Y = new THREE.Vector3(0, 1, 0), X = new THREE.Vector3(1, 0, 0);
+let blinkT = 2, blink = 0, jaw = 0, jawT = 0, sylT = 0, t = 0;
+const clock = new THREE.Clock();
+function resize() { const w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+addEventListener('resize', resize); resize();
+
+function frame() {
+  requestAnimationFrame(frame);
+  const dt = Math.min(clock.getDelta(), 0.05); t += dt;
+  if (!cur) return;
+  mixer.update(dt);
+  const s = cur.g.scene;
+  if (chainAct) { const w = chainAct.getEffectiveWeight(); s.position.set(chainOff.x * w, 0, chainOff.z * w); }
+  s.updateMatrixWorld(true);
+  // walk plays in place
+  // breathing: chest rises a little
+  worldRot(cur.chest, new THREE.Quaternion().setFromAxisAngle(X, -Math.sin(t * 1.6) * 0.015));
+  // look left/right: neck 40 %, head 60 %
+  look += (lookT - look) * Math.min(1, dt * 4);
+  const a = look * 0.7;
+  worldRot(cur.neck, new THREE.Quaternion().setFromAxisAngle(Y, a * 0.4));
+  worldRot(cur.head, new THREE.Quaternion().setFromAxisAngle(Y, a * 0.6));
+  setM('eyeLookOutLeft', Math.max(0, look) * 0.5); setM('eyeLookInRight', Math.max(0, look) * 0.5);
+  setM('eyeLookInLeft', Math.max(0, -look) * 0.5); setM('eyeLookOutRight', Math.max(0, -look) * 0.5);
+  // blink
+  blinkT -= dt; if (blinkT < 0) { blink = 0.16; blinkT = 2 + Math.random() * 3; }
+  blink = Math.max(0, blink - dt); const bv = blink > 0 ? Math.sin((blink / 0.16) * Math.PI) : 0;
+  setM('eyeBlinkLeft', bv); setM('eyeBlinkRight', bv);
+  // talk: random syllables
+  sylT -= dt;
+  if (sylT < 0) { sylT = 0.09 + Math.random() * 0.12; jawT = talking ? (Math.random() < 0.15 ? 0.03 : 0.12 + Math.random() * 0.28) : 0; }
+  jaw += (jawT - jaw) * Math.min(1, dt * 18);
+  setM('jawOpen', jaw); setM('mouthFunnel', talking ? Math.max(0, 0.25 - jaw) : 0);
+  setM('mouthSmileLeft', 0.18); setM('mouthSmileRight', 0.18);
+  // camera: full body fits by character height and follows the hips (sit down / stand up move the body)
+  const hp = cur.head.getWorldPosition(new THREE.Vector3());
+  const pp = cur.pelvis.getWorldPosition(new THREE.Vector3());
+  const face = camMode === 'face';
+  const fit = (cur.h * 0.62) / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) / Math.min(1, camera.aspect * 1.4);
+  const want = face ? hp.add(new THREE.Vector3(0, 0.06, 0)) : new THREE.Vector3(pp.x, cur.h * 0.5, pp.z);
+  camT.lerp(want, camSnap ? 1 : Math.min(1, dt * 6)); camSnap = false;
+  const dist = (face ? 0.75 : fit) * zoom[camMode];
+  camera.position.set(camT.x + Math.sin(yaw) * dist, camT.y + (face ? 0.02 : 0.15), camT.z + Math.cos(yaw) * dist);
+  camera.lookAt(camT);
+  renderer.render(scene, camera);
+}
+await pick(new URLSearchParams(location.search).get('c') || 'rb_f05');
+frame();
+</script></body></html>

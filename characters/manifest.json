@@ -1,0 +1,260 @@
+{
+  "rb_m08": {
+    "file": "rb_m08.glb",
+    "bytes": 766540,
+    "pelvis_rest_h": 0.895,
+    "clips": {
+      "stand_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "stand_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "walk": {
+        "dur": 1.233,
+        "speed": 0.874
+      },
+      "sit_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_down": {
+        "dur": 1.233,
+        "once": true,
+        "move": [
+          0.043,
+          0.286
+        ]
+      },
+      "stand_up": {
+        "dur": 1.0,
+        "once": true,
+        "move": [
+          -0.316,
+          -0.386
+        ]
+      }
+    }
+  },
+  "rb_f05": {
+    "file": "rb_f05.glb",
+    "bytes": 839620,
+    "pelvis_rest_h": 0.923,
+    "clips": {
+      "stand_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "stand_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "walk": {
+        "dur": 1.233,
+        "speed": 0.908
+      },
+      "sit_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_down": {
+        "dur": 1.233,
+        "once": true,
+        "move": [
+          0.047,
+          0.258
+        ]
+      },
+      "stand_up": {
+        "dur": 1.0,
+        "once": true,
+        "move": [
+          -0.328,
+          -0.362
+        ]
+      }
+    }
+  },
+  "rb_f02": {
+    "file": "rb_f02.glb",
+    "bytes": 775904,
+    "pelvis_rest_h": 0.923,
+    "clips": {
+      "stand_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "stand_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "walk": {
+        "dur": 1.233,
+        "speed": 0.908
+      },
+      "sit_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_down": {
+        "dur": 1.233,
+        "once": true,
+        "move": [
+          0.047,
+          0.258
+        ]
+      },
+      "stand_up": {
+        "dur": 1.0,
+        "once": true,
+        "move": [
+          -0.328,
+          -0.362
+        ]
+      }
+    }
+  },
+  "rb_f17": {
+    "file": "rb_f17.glb",
+    "bytes": 872324,
+    "pelvis_rest_h": 0.923,
+    "clips": {
+      "stand_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "stand_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "walk": {
+        "dur": 1.233,
+        "speed": 0.908
+      },
+      "sit_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_down": {
+        "dur": 1.233,
+        "once": true,
+        "move": [
+          0.047,
+          0.258
+        ]
+      },
+      "stand_up": {
+        "dur": 1.0,
+        "once": true,
+        "move": [
+          -0.328,
+          -0.362
+        ]
+      }
+    }
+  },
+  "rb_m04": {
+    "file": "rb_m04.glb",
+    "bytes": 806524,
+    "pelvis_rest_h": 0.895,
+    "clips": {
+      "stand_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "stand_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "walk": {
+        "dur": 1.233,
+        "speed": 0.874
+      },
+      "sit_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_down": {
+        "dur": 1.233,
+        "once": true,
+        "move": [
+          0.043,
+          0.286
+        ]
+      },
+      "stand_up": {
+        "dur": 1.0,
+        "once": true,
+        "move": [
+          -0.316,
+          -0.386
+        ]
+      }
+    }
+  },
+  "rb_m06": {
+    "file": "rb_m06.glb",
+    "bytes": 844888,
+    "pelvis_rest_h": 0.895,
+    "clips": {
+      "stand_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "stand_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "walk": {
+        "dur": 1.233,
+        "speed": 0.874
+      },
+      "sit_idle": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_talk": {
+        "dur": 6.0,
+        "speed": 0
+      },
+      "sit_down": {
+        "dur": 1.233,
+        "once": true,
+        "move": [
+          0.043,
+          0.286
+        ]
+      },
+      "stand_up": {
+        "dur": 1.0,
+        "once": true,
+        "move": [
+          -0.316,
+          -0.386
+        ]
+      }
+    }
+  }
+}
