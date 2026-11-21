@@ -3,25 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sahne Önizleme</title>
+<title>İngilizce Konuşma Sahnesi</title>
+<meta name="description" content="3D karakterlerle İngilizce günlük konuşma sahnesi: How much milk do we need?">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tunacodin.github.io/scene-demo/">
+<meta property="og:title" content="İngilizce Konuşma Sahnesi">
+<meta property="og:description" content="3D karakterlerle günlük konuşma: How much milk do we need?">
+<meta property="og:image" content="https://tunacodin.github.io/scene-demo/poster.jpg">
+<meta property="og:image:width" content="720">
+<meta property="og:image:height" content="1280">
 <style>
   :root { --bg: #e9edf1; --ink: #1d2733; --card: #ffffff; --acc: #2f6fde; }
   html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font-family: system-ui, sans-serif; }
-  main { max-width: 560px; margin: 0 auto; padding: 32px 16px; display: grid; gap: 14px; }
-  h1 { font-size: 28px; margin: 0 0 8px; }
+  main { max-width: 560px; margin: 0 auto; padding: 24px 16px 40px; display: grid; gap: 14px; }
+  h1 { font-size: 26px; margin: 0; }
+  p.sub { margin: -6px 0 4px; font-size: 18px; opacity: .75; }
+  video { width: 100%; max-height: 78vh; border-radius: 16px; background: #11151a; display: block; }
   a { display: block; text-decoration: none; background: var(--card); color: var(--ink); border-radius: 16px; padding: 20px; font-size: 20px; font-weight: 700; }
-  a.main { background: var(--acc); color: #fff; }
   a span { display: block; font-size: 15px; font-weight: 500; opacity: .75; margin-top: 4px; }
 </style>
 </head>
 <body>
 <main>
-  <h1>Sahne Önizleme</h1>
-  <a class="main" href="scenes/episode.html?e=a2_u1_milk">Bölümü izle<span>How much milk do we need?</span></a>
-  <a href="scenes/episode.html?e=a2_u1_milk&ar=9:16">Dikey izle<span>Telefon görünümü</span></a>
-  <a href="scenes/episodes/video/a2_u1_milk.mp4">Videoyu aç<span>Sesli MP4</span></a>
-  <a href="scenes/view.html?s=home">Mekânları gez<span>Ev, mutfak, market, park, okul, spor salonu</span></a>
-  <a href="characters/viewer.html">Karakterleri gör<span>6 karakter, hareketleriyle</span></a>
+  <h1>İngilizce Konuşma Sahnesi</h1>
+  <p class="sub">How much milk do we need?</p>
+  <video src="scenes/episodes/video/a2_u1_milk.mp4" poster="poster.jpg" controls playsinline preload="metadata"></video>
+  <a href="scenes/episode.html?e=a2_u1_milk">3D sahneyi canlı aç<span>Aynı sahne, tarayıcıda çiziliyor (sessiz)</span></a>
+  <a href="scenes/view.html?s=home">Diğer mekânlar<span>Ev, mutfak, market, park, okul, spor salonu</span></a>
+  <a href="characters/viewer.html">Karakterler<span>6 karakter, hareketleriyle</span></a>
 </main>
 </body>
 </html>
