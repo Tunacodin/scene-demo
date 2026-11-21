@@ -1,0 +1,57 @@
+{
+ "name": "Okul: sınıf",
+ "background": "#e9edf1",
+ "room": {
+  "w": 7.0, "d": 6.5, "h": 3.0,
+  "floor": { "tex": "linoleum_brown", "tile": 1.5 },
+  "wall": { "tex": "painted_plaster_wall", "tile": 2.5, "tint": "#e9e6dc" },
+  "ceiling": { "color": "#f4f3ee" },
+  "openings": [
+   { "wall": "w", "type": "window", "x": -2.0, "w": 1.4, "h": 1.5, "sill": 0.9 },
+   { "wall": "w", "type": "window", "x": 0.0, "w": 1.4, "h": 1.5, "sill": 0.9 },
+   { "wall": "w", "type": "window", "x": 2.0, "w": 1.4, "h": 1.5, "sill": 0.9 },
+   { "wall": "e", "type": "door", "x": 2.2, "w": 0.95 }
+  ]
+ },
+ "lights": { "env": 0.7, "sun": 2.2, "sunPos": [-7, 6, 1], "hemi": 0.4,
+  "points": [ { "pos": [0, 2.8, -1.0], "color": "#f6f7ff", "power": 3, "dist": 6 },
+              { "pos": [0, 2.8, 1.5], "color": "#f6f7ff", "power": 3, "dist": 6 } ] },
+ "props": [
+  { "id": "whiteboard", "pos": [0, 0.9, -3.21] },
+  { "id": "wall_clock", "tag": "clock", "pos": [0, 2.3, -3.225] },
+  { "id": "teacher_desk", "tag": "desk", "pos": [2.0, 0, -2.2] },
+  { "id": "globe", "tag": "globe", "pos": [2.45, 0.76, -2.3], "rot": -30 },
+  { "id": "chalkboard", "pos": [-2.7, 0, -2.4], "rot": 30 },
+  { "id": "corkboard", "tag": "cork", "pos": [3.48, 1.0, -0.5], "rot": -90 },
+  { "id": "school_desk", "pos": [-1.2, 0, -0.8], "rot": 180 },
+  { "id": "school_desk", "pos": [0.2, 0, -0.8], "rot": 180 },
+  { "id": "school_desk", "pos": [1.6, 0, -0.8], "rot": 180 },
+  { "id": "school_desk", "pos": [-1.2, 0, 0.9], "rot": 180 },
+  { "id": "school_desk", "pos": [0.2, 0, 0.9], "rot": 180 },
+  { "id": "school_desk", "pos": [1.6, 0, 0.9], "rot": 180 },
+  { "id": "school_chair", "pos": [-1.2, 0, -0.3], "rot": 180 },
+  { "id": "school_chair", "pos": [0.2, 0, -0.3], "rot": 180 },
+  { "id": "school_chair", "pos": [1.6, 0, -0.3], "rot": 180 },
+  { "id": "school_chair", "pos": [-1.2, 0, 1.4], "rot": 180 },
+  { "id": "school_chair", "pos": [0.2, 0, 1.4], "rot": 180 },
+  { "id": "school_chair", "pos": [1.6, 0, 1.4], "rot": 180 }
+ ],
+ "marks": {
+  "front_mid": { "type": "sit", "pos": [0.2, 0.45, -0.32], "rot": 180 },
+  "front_left": { "type": "sit", "pos": [-1.2, 0.45, -0.32], "rot": 180 },
+  "back_right": { "type": "sit", "pos": [1.6, 0.45, 1.38], "rot": 180 },
+  "teacher": { "type": "stand", "pos": [0.9, 0, -2.5], "rot": -15 },
+  "board": { "type": "stand", "pos": [-0.6, 0, -2.6], "rot": 160 }
+ },
+ "cast": [
+  { "char": "rb_m08", "mark": "teacher", "clip": "stand_talk" },
+  { "char": "rb_f05", "mark": "front_mid" },
+  { "char": "rb_m06", "mark": "back_right" }
+ ],
+ "camera": { "pos": [2.6, 2.2, 5.0], "target": [-0.2, 1.0, -1.3], "fov": 50 },
+ "variants": [
+  { "name": "Krem sınıf", "tint": { "desk": { "wood": "#8a5a35" }, "clock": { "rim": "#1c1c1c" }, "globe": { "ocean": "#2f6fae" } }, "room": { "wall": "#e9e6dc" } },
+  { "name": "Nane sınıf", "tint": { "desk": { "wood": "#c8a27a" }, "clock": { "rim": "#2e6b5a" }, "globe": { "ocean": "#3a8a9a" } }, "room": { "wall": "#dfe9e4" } },
+  { "name": "Gök mavisi sınıf", "tint": { "desk": { "wood": "#5c4030" }, "clock": { "rim": "#b3261e" }, "globe": { "ocean": "#24508a" } }, "room": { "wall": "#dde6ef" } }
+ ]
+}

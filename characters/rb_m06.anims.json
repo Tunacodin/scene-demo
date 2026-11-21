@@ -1,0 +1,1 @@
+{"stand_idle": {"dur": 6.0, "speed": 0}, "stand_talk": {"dur": 6.0, "speed": 0}, "walk": {"dur": 1.233, "speed": 0.874}, "sit_idle": {"dur": 6.0, "speed": 0}, "sit_talk": {"dur": 6.0, "speed": 0}, "sit_down": {"dur": 1.233, "once": true, "move": [0.043, 0.286]}, "stand_up": {"dur": 1.0, "once": true, "move": [-0.316, -0.386]}}

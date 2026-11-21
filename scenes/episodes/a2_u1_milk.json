@@ -1,0 +1,28 @@
+{
+ "title": "How much milk do we need?",
+ "scene": "kitchen",
+ "variant": 1,
+ "seed": 7,
+ "learner": "leo",
+ "audio": "audio/a2_u1_milk/",
+ "voices": { "anna": "en-US-AvaMultilingualNeural", "leo": "en-US-AndrewMultilingualNeural" },
+ "rate": "-8%",
+ "marks": {
+  "chair_end": { "type": "sit", "pos": [1.47, 0.47, 0.7], "rot": -115 },
+  "chair_right": { "type": "sit", "pos": [0.75, 0.47, 0.03], "rot": 20 }
+ },
+ "cast": [
+  { "id": "anna", "char": "rb_f02", "mark": "chair_end" },
+  { "id": "leo", "char": "rb_m04", "mark": "chair_right" }
+ ],
+ "lines": [
+  { "who": "anna", "text": "We need to go shopping. Can you help me with the list?", "tr": "Alışverişe gitmemiz lazım. Listeye yardım eder misin?" },
+  { "who": "leo", "text": "Sure. How much milk do we need?", "tr": "Tabii. Ne kadar süte ihtiyacımız var?" },
+  { "who": "anna", "text": "Two bottles. We don't have any milk.", "tr": "İki şişe. Hiç sütümüz yok." },
+  { "who": "leo", "text": "Okay. And how many eggs?", "tr": "Tamam. Peki kaç yumurta?" },
+  { "who": "anna", "text": "Twelve eggs, please. I want to make a cake.", "tr": "On iki yumurta lütfen. Kek yapmak istiyorum." },
+  { "who": "leo", "text": "A cake? How much sugar do we have?", "tr": "Kek mi? Ne kadar şekerimiz var?" },
+  { "who": "anna", "text": "Not much. Let's buy one bag.", "tr": "Pek yok. Bir paket alalım." },
+  { "who": "leo", "text": "Great. Milk, eggs and sugar. Let's go!", "tr": "Harika. Süt, yumurta ve şeker. Hadi gidelim!" }
+ ]
+}

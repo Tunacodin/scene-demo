@@ -1,0 +1,55 @@
+{
+ "name": "Market kasası",
+ "background": "#e9edf1",
+ "room": {
+  "w": 7.0, "d": 6.0, "h": 3.2,
+  "floor": { "tex": "floor_tiles_06", "tile": 1.0 },
+  "wall": { "tex": "painted_plaster_wall", "tile": 3, "tint": "#f1efea" },
+  "ceiling": { "color": "#f4f4f2" },
+  "openings": [
+   { "wall": "e", "type": "door", "x": 1.6, "w": 1.6, "h": 2.3, "leaf": false }
+  ]
+ },
+ "lights": { "env": 0.8, "sun": 0.8, "sunPos": [5, 6, 3], "hemi": 0.5,
+  "points": [ { "pos": [-1.5, 2.9, 0.8], "color": "#f4f6ff", "power": 4, "dist": 6 },
+              { "pos": [1.2, 2.9, -1.5], "color": "#f4f6ff", "power": 4, "dist": 6 } ] },
+ "props": [
+  { "id": "ceiling_panel", "pos": [-1.5, 3.16, 0.8] },
+  { "id": "ceiling_panel", "pos": [1.2, 3.16, 0.8] },
+  { "id": "ceiling_panel", "pos": [-1.5, 3.16, -1.6] },
+  { "id": "ceiling_panel", "pos": [1.2, 3.16, -1.6] },
+  { "id": "checkout", "tag": "checkout", "pos": [-1.5, 0, 1.0], "rot": 90 },
+  { "id": "cash_register", "pos": [-1.62, 0.86, 0.3], "rot": -90, "scale": 0.8 },
+  { "id": "card_reader", "pos": [-1.24, 0.86, 0.45], "rot": 90 },
+  { "id": "cooler", "tag": "cooler", "pos": [-2.95, 0, -2.63] },
+  { "id": "cooler", "tag": "cooler", "pos": [-2.13, 0, -2.63] },
+  { "id": "gondola", "tag": "shelf", "pos": [-1.0, 0, -2.74] },
+  { "id": "gondola", "tag": "shelf", "pos": [0.22, 0, -2.74] },
+  { "id": "gondola", "tag": "shelf", "pos": [1.44, 0, -2.74] },
+  { "id": "gondola", "tag": "shelf", "pos": [2.66, 0, -2.74] },
+  { "id": "gondola", "tag": "shelf", "pos": [0.6, 0, -0.35] },
+  { "id": "gondola", "tag": "shelf", "pos": [1.82, 0, -0.35] },
+  { "id": "gondola", "tag": "shelf", "pos": [0.6, 0, -0.86], "rot": 180 },
+  { "id": "gondola", "tag": "shelf", "pos": [1.82, 0, -0.86], "rot": 180 },
+  { "id": "produce_stand", "tag": "stand", "pos": [2.7, 0, 1.2], "rot": -90 },
+  { "id": "crate", "pos": [3.1, 0, 2.5] },
+  { "id": "crate", "pos": [3.1, 0.26, 2.5], "rot": 10 },
+  { "id": "basket", "tag": "basket", "pos": [-0.4, 0, 2.5] },
+  { "id": "basket", "tag": "basket", "pos": [-0.4, 0.2, 2.5], "rot": 4 }
+ ],
+ "marks": {
+  "cashier": { "type": "stand", "pos": [-2.15, 0, 0.6], "rot": 90 },
+  "customer": { "type": "stand", "pos": [-0.8, 0, 0.6], "rot": -90 },
+  "aisle": { "type": "stand", "pos": [1.2, 0, -1.6], "rot": 180 }
+ },
+ "cast": [
+  { "char": "rb_m06", "mark": "cashier", "clip": "stand_talk" },
+  { "char": "rb_f17", "mark": "customer" }
+ ],
+ "camera": { "pos": [3.0, 2.3, 4.8], "target": [-0.8, 1.0, 0.0], "fov": 50 },
+ "variants": [
+  { "name": "Mavi market", "tint": { "checkout": { "body": "#3f6a8a" }, "shelf": { "body": "#e8e8e4", "strip": "#f2c230" }, "basket": { "basket": "#b3261e" } }, "room": { "wall": "#f1efea" } },
+  { "name": "Kırmızı market", "tint": { "checkout": { "body": "#a23a32" }, "shelf": { "body": "#d9d6d0", "strip": "#f4f2ec" }, "basket": { "basket": "#2f5f8a" } }, "room": { "wall": "#f3ece4" } },
+  { "name": "Yeşil market", "tint": { "checkout": { "body": "#3d6b4a" }, "shelf": { "body": "#eceae2", "strip": "#e9d36a" }, "basket": { "basket": "#3d6b4a" } }, "room": { "wall": "#e8efe6" } }
+ ]
+}

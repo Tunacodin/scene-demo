@@ -1,0 +1,49 @@
+{
+ "name": "Park",
+ "background": "#cfe0ee",
+ "outdoor": {
+  "size": 44,
+  "ground": { "tex": "grass_ground", "tile": 2.5 },
+  "paths": [
+   { "x": 0, "z": 0.9, "w": 40, "d": 2.2, "surface": { "tex": "rectangular_paving", "tile": 1.5 } },
+   { "x": 4.6, "z": -4.0, "w": 1.6, "d": 10, "rot": 25, "surface": { "tex": "rectangular_paving", "tile": 1.5 } }
+  ],
+  "skyTop": "#7fa9d6", "skyBottom": "#e3edf3", "shadowSize": 14
+ },
+ "lights": { "env": 0.7, "sun": 2.6, "sunPos": [6, 10, 4], "hemi": 0.45, "skyColor": "#bcd6f0", "groundColor": "#6b7a4a" },
+ "props": [
+  { "id": "park_bench", "tag": "bench", "pos": [-2.5, 0, -0.55] },
+  { "id": "park_bench", "tag": "bench", "pos": [1.0, 0, -0.55] },
+  { "id": "street_lamp", "pos": [-0.75, 0, -0.45] },
+  { "id": "street_lamp", "pos": [6.5, 0, -0.45] },
+  { "id": "trash_bin", "tag": "bin", "pos": [2.2, 0, -0.45] },
+  { "id": "flower_bed", "tag": "flowers", "pos": [-5.2, 0, -0.75] },
+  { "id": "flower_bed", "tag": "flowers", "pos": [-0.75, 0, -1.6] },
+  { "id": "shrub", "pos": [-4.0, 0, -2.2] },
+  { "id": "picnic_table", "pos": [4.8, 0, -2.6], "rot": 90 },
+  { "id": "tree_round", "tag": "trees", "pos": [-1.2, 0, -3.6] },
+  { "id": "tree_round", "tag": "trees", "pos": [-6.5, 0, -5.0], "rot": 70, "scale": 1.15 },
+  { "id": "tree_round", "tag": "trees", "pos": [2.6, 0, -8.0], "rot": 140, "scale": 1.25 },
+  { "id": "tree_round", "tag": "trees", "pos": [8.5, 0, -4.5], "rot": 200 },
+  { "id": "tree_young", "tag": "trees", "pos": [2.4, 0, -2.4] },
+  { "id": "tree_young", "tag": "trees", "pos": [-4.2, 0, 3.4] },
+  { "id": "tree_round", "tag": "trees", "pos": [-9.0, 0, 3.0], "rot": 30 }
+ ],
+ "marks": {
+  "bench_left": { "type": "sit", "pos": [-2.8, 0.45, -0.5], "rot": 0 },
+  "bench_right": { "type": "sit", "pos": [-2.2, 0.45, -0.5], "rot": 0 },
+  "bench2_left": { "type": "sit", "pos": [0.7, 0.45, -0.5], "rot": 0 },
+  "path": { "type": "stand", "pos": [-1.5, 0, 0.3], "rot": -118 },
+  "picnic": { "type": "stand", "pos": [3.6, 0, -2.6], "rot": 90 }
+ },
+ "cast": [
+  { "char": "rb_f02", "mark": "bench_left", "clip": "sit_talk" },
+  { "char": "rb_m04", "mark": "path", "clip": "stand_talk" }
+ ],
+ "camera": { "pos": [1.6, 1.8, 6.0], "target": [-1.3, 1.0, -0.8], "fov": 45 },
+ "variants": [
+  { "name": "Yaz", "tint": { "trees": { "leaves": "#4e7a32" }, "flowers": { "flowers": "#d8404f" }, "bin": { "body": "#33553f" } } },
+  { "name": "Sonbahar", "tint": { "trees": { "leaves": "#c47a2c" }, "flowers": { "flowers": "#e0a030" }, "bin": { "body": "#5a3a2a" } } },
+  { "name": "İlkbahar", "tint": { "trees": { "leaves": "#86b24a" }, "flowers": { "flowers": "#e98ab6" }, "bin": { "body": "#2f5f8a" } } }
+ ]
+}

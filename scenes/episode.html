@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bölüm Önizleme</title>
+<style>
+  :root { --bg: #11151a; --ink: #f4f6f8; --card: #ffffff1f; --acc: #2f6fde; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: system-ui, sans-serif; overflow: hidden; }
+  #stage { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); overflow: hidden; border-radius: 12px; }
+  canvas, #still { display: block; width: 100%; height: 100%; }
+  #still { position: absolute; inset: 0; }
+  #sub { position: absolute; left: 6%; right: 6%; bottom: 7%; text-align: center; pointer-events: none; text-shadow: 0 2px 8px #000a; }
+  #sub .en { font-size: clamp(20px, 3.4vmin, 40px); font-weight: 700; line-height: 1.2; }
+  #sub .tr { font-size: clamp(15px, 2.4vmin, 28px); font-weight: 500; opacity: .85; margin-top: 6px; }
+  #dbg { position: absolute; left: 12px; top: 12px; font: 600 15px ui-monospace, monospace; background: #000a; padding: 6px 10px; border-radius: 8px; }
+  #bar { position: fixed; left: 16px; right: 16px; bottom: 14px; display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
+  #bar button { border: 0; border-radius: 14px; padding: 12px 18px; font-size: 17px; font-weight: 600; background: var(--card); color: var(--ink); cursor: pointer; }
+  #bar input { flex: 1 1 240px; max-width: 520px; accent-color: var(--acc); }
+  #load { position: fixed; inset: 0; display: grid; place-items: center; font-size: 22px; font-weight: 600; }
+  body.shot #bar { display: none; }
+</style>
+<script type="importmap">{"imports":{"three":"../characters/three/three.module.js","three/addons/":"../characters/three/addons/"}}</script>
+</head>
+<body>
+<div id="stage"><canvas id="c"></canvas><div id="sub"></div></div>
+<div id="bar">
+  <button id="play">Durdur</button>
+  <input id="seek" type="range" min="0" max="1" step="0.01" value="0">
+  <button id="recut">Başka kurgu</button>
+  <button id="ar">Dikey</button>
+</div>
+<div id="load">Yükleniyor</div>
+<script type="module">
+import * as THREE from 'three';
+import { makeRenderer, loadScene } from './scene-kit.js';
+import { plan } from './director.js';
+
+const q = new URLSearchParams(location.search);
+const epId = q.get('e') || 'a2_u1_milk';
+let ar = (q.get('ar') || '16:9').split(':').map(Number), seed = +(q.get('seed') || 0);
+const render = q.has('render'), shotMode = q.has('shot') || render, debug = q.has('debug');
+globalThis.NOLOOK = q.has('nolook');
+if (shotMode) document.body.classList.add('shot');
+
+// episode = scene recipe + its own marks, cast, camera and lines
+const res = await fetch('episodes/' + epId + '.json');
+if (!res.ok) { document.getElementById('load').textContent = 'Bölüm bulunamadı: ' + epId; throw new Error('episode ' + epId); }
+const ep = await res.json();
+ep.id = epId;
+// real voice: audio length drives the timing, ARKit frames drive the face
+if (ep.audio && !q.has('noaudio')) await Promise.all(ep.lines.map(async (l, i) => {
+  const r = await fetch('episodes/' + ep.audio + 'l' + i + '.json');
+  if (r.ok) { const j = await r.json(); Object.assign(l, { dur: j.dur, bs: j.bs, fps: j.fps }); }
+}));
+const R = await (await fetch(ep.scene + '.json')).json();
+R.marks = { ...R.marks, ...(ep.marks || {}) };
+// a sit mark turned by the episode turns its chair too (else the arm clips the backrest)
+for (const m of Object.values(ep.marks || {})) if (m.type === 'sit')
+  for (const p of R.props || []) if (/chair|stool|seat|bench|sofa/i.test(p.id) && Math.hypot(p.pos[0] - m.pos[0], p.pos[2] - m.pos[2]) < 0.2) p.rot = m.rot;
+R.cast = ep.cast;
+if (ep.camera) R.camera = ep.camera;
+const variant = R.variants && R.variants[ep.variant || 0];
+if (variant) R.variants = [variant];
+
+const stage = document.getElementById('stage'), canvas = document.getElementById('c');
+const renderer = makeRenderer(canvas);
+const S = await loadScene(R, renderer, f => document.getElementById('load').textContent = 'Yükleniyor ' + Math.round(f * 100) + '%');
+document.getElementById('load').remove();
+const camera = new THREE.PerspectiveCamera(45, ar[0] / ar[1], 0.03, 200);
+
+let D;
+const build = () => { D = plan(S, ep, { seed: seed || ep.seed, aspect: ar[0] / ar[1], learner: q.has('watch') ? null : ep.learner }); seek.max = D.total.toFixed(2); };
+const seek = document.getElementById('seek');
+
+const sub = document.getElementById('sub');
+let dbg = null;
+if (debug) { dbg = document.createElement('div'); dbg.id = 'dbg'; stage.append(dbg); }
+let lastLine = -1;
+function draw(t) {
+  const info = D.frame(t, camera);
+  if (q.get('cam')) {   // dev check: cam=<actor>,<yaw deg from its front>,<dist m>,<height m>
+    const [who, yaw, dist, hgt] = q.get('cam').split(','), a = D.actors.find(x => x.id === who);
+    if (a && q.has('solo') && !draw.solo) {   // dev: hide everything but the actors
+      draw.solo = true; const keep = new Set(); for (const x of D.actors) x.obj.traverse(o => keep.add(o));
+      S.scene.traverse(o => { if (o.isMesh && !keep.has(o)) o.visible = false; });
+    }
+    if (a) {
+      const p = a.obj.position, r = a.obj.rotation.y + (+yaw) * Math.PI / 180;
+      camera.position.set(p.x + Math.sin(r) * +dist, p.y + +hgt, p.z + Math.cos(r) * +dist);
+      camera.lookAt(p.x, p.y + +hgt * 0.6, p.z);
+    }
+  }
+  S.update(camera, 0);
+  renderer.render(S.scene, camera);
+  const li = info.line ? info.line.i : -1;
+  if (li !== lastLine) {
+    lastLine = li;
+    sub.innerHTML = info.line ? `<div class="en"></div><div class="tr"></div>` : '';
+    if (info.line) { sub.querySelector('.en').textContent = info.line.text; sub.querySelector('.tr').textContent = info.line.tr || ''; }
+  }
+  if (dbg) dbg.textContent = `${t.toFixed(1)}s  ${info.shot.type}  (${info.shot.who})`;
+  return info;
+}
+
+function layout() {
+  const pad = shotMode ? 0 : 90, W = innerWidth, H = innerHeight - pad;
+  const k = Math.min(W / ar[0], H / ar[1]), w = Math.round(ar[0] * k), h = Math.round(ar[1] * k);
+  Object.assign(stage.style, { width: w + 'px', height: h + 'px', top: (shotMode ? H / 2 : H / 2 + 10) + 'px', borderRadius: shotMode ? '0' : '12px' });
+  renderer.setSize(w, h, false); camera.aspect = w / h;
+}
+addEventListener('resize', () => { layout(); draw(t); });
+layout(); build();
+
+let t = +(q.get('t') || 0), playing = !shotMode, last = performance.now();
+if (render) sub.style.display = 'none';   // video render: subtitles live in the app, not in the pixels
+if (q.has('perf') || render) {
+  // perf harness hook (opt-in): expose internals, no auto loop
+  draw(t); renderer.getContext().finish();
+  globalThis.__perf = { THREE, renderer, S, camera, get D() { return D; }, draw, ready: performance.now() };
+} else if (shotMode) {
+  // headless capture: render one frame and pin it as an image
+  draw(t); draw(t);
+  const img = new Image(); img.id = 'still'; img.src = canvas.toDataURL('image/png');
+  canvas.after(img); canvas.style.visibility = 'hidden';   // keep subtitles and debug above the still
+  console.log('shots', D.shots.map(s => `${s.t0.toFixed(1)} ${s.type} ${s.who}`).join(' | '));
+  console.log('jaw', D.actors.map(a => a.id + ':' + (a.jaw ? a.jaw.mesh.name : 'none')).join(' '));
+} else {
+  const playBtn = document.getElementById('play');
+  playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? 'Durdur' : 'Oynat'; last = performance.now(); };
+  seek.oninput = () => { t = +seek.value; draw(t); };
+  document.getElementById('recut').onclick = () => { seed = (seed || ep.seed) + 1; build(); draw(t); };
+  const arBtn = document.getElementById('ar');
+  arBtn.onclick = () => { ar = ar[0] > ar[1] ? [9, 16] : [16, 9]; arBtn.textContent = ar[0] > ar[1] ? 'Dikey' : 'Yatay'; layout(); build(); draw(t); };
+  renderer.setAnimationLoop(() => {
+    const now = performance.now();
+    if (playing) { t += Math.min(0.05, (now - last) / 1000); if (t > D.total) t = 0; seek.value = t; }
+    last = now;
+    draw(t);
+  });
+}
+</script>
+</body>
+</html>

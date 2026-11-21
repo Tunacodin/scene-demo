@@ -1,0 +1,57 @@
+{
+ "name": "Mutfak",
+ "background": "#e9edf1",
+ "room": {
+  "w": 4.6, "d": 4.0, "h": 2.7,
+  "floor": { "tex": "floor_tiles_06", "tile": 1.2 },
+  "wall": { "tex": "painted_plaster_wall", "tile": 2.5, "tint": "#ece7de" },
+  "ceiling": { "color": "#f6f4ef" },
+  "openings": [
+   { "wall": "n", "type": "window", "x": -0.58, "w": 0.7, "h": 1.0, "sill": 1.2 },
+   { "wall": "w", "type": "door", "x": 1.2, "w": 0.9 }
+  ]
+ },
+ "lights": { "env": 0.6, "sun": 1.8, "sunPos": [-1, 6, -5], "hemi": 0.35,
+  "points": [ { "pos": [0.3, 2.2, 0.7], "color": "#fff1dc", "power": 3, "dist": 5 },
+              { "pos": [0.2, 1.4, -1.5], "color": "#fff6ea", "power": 1.5, "dist": 3 } ] },
+ "props": [
+  { "id": "fridge", "tag": "fridge", "pos": [-1.93, 0, -1.65] },
+  { "id": "kitchen_drawers", "tag": "kitchen", "pos": [-1.28, 0, -1.69] },
+  { "id": "kitchen_sink", "tag": "kitchen", "pos": [-0.58, 0, -1.69] },
+  { "id": "kitchen_base", "tag": "kitchen", "pos": [0.12, 0, -1.69] },
+  { "id": "stove", "pos": [0.67, 0, -1.675] },
+  { "id": "kitchen_drawers", "tag": "kitchen", "pos": [1.22, 0, -1.69] },
+  { "id": "kitchen_base", "tag": "kitchen", "pos": [1.82, 0, -1.69] },
+  { "id": "kitchen_upper", "tag": "kitchen", "pos": [-1.28, 1.45, -1.82] },
+  { "id": "kitchen_upper", "tag": "kitchen", "pos": [0.12, 1.45, -1.82] },
+  { "id": "hood", "tag": "kitchen", "pos": [0.67, 1.54, -1.75] },
+  { "id": "kitchen_upper", "tag": "kitchen", "pos": [1.22, 1.45, -1.82] },
+  { "id": "kitchen_upper", "tag": "kitchen", "pos": [1.82, 1.45, -1.82] },
+  { "id": "kettle", "pos": [1.3, 0.9, -1.75], "rot": -20 },
+  { "id": "cutting_board", "pos": [0.12, 0.9, -1.65], "rot": 8 },
+  { "id": "pot", "pos": [0.67, 0.86, -1.6] },
+  { "id": "dining_table", "pos": [0.3, 0, 0.7], "scale": [1.0, 1.38, 1.25] },
+  { "id": "fruit_bowl", "tag": "bowl", "pos": [0.55, 0.76, 0.75] },
+  { "id": "dining_chair", "pos": [-0.15, 0, 0.0] },
+  { "id": "dining_chair", "pos": [0.75, 0, 0.0] },
+  { "id": "dining_chair", "pos": [1.5, 0, 0.7], "rot": -90 },
+  { "id": "plant", "pos": [-1.95, 0, 1.6], "scale": 0.8 }
+ ],
+ "marks": {
+  "chair_left": { "type": "sit", "pos": [-0.15, 0.47, 0.03], "rot": 0 },
+  "chair_right": { "type": "sit", "pos": [0.75, 0.47, 0.03], "rot": 0 },
+  "chair_end": { "type": "sit", "pos": [1.47, 0.47, 0.7], "rot": -90 },
+  "stove": { "type": "stand", "pos": [0.67, 0, -1.0], "rot": 180 },
+  "counter": { "type": "stand", "pos": [1.3, 0, -0.75], "rot": -120 }
+ },
+ "cast": [
+  { "char": "rb_f02", "mark": "chair_left", "clip": "sit_talk" },
+  { "char": "rb_m04", "mark": "counter", "clip": "stand_talk" }
+ ],
+ "camera": { "pos": [2.0, 1.9, 3.7], "target": [-0.1, 0.9, -0.7], "fov": 50 },
+ "variants": [
+  { "name": "Beyaz dolap", "tint": { "kitchen": { "body": "#eeebe5", "top": "#3a3735" }, "bowl": { "bowl": "#d9d4cb" } }, "room": { "wall": "#ece7de" } },
+  { "name": "Adaçayı yeşili", "tint": { "kitchen": { "body": "#8fa38a", "top": "#e8e4dc" }, "bowl": { "bowl": "#c9a47a" } }, "room": { "wall": "#f1ece2" } },
+  { "name": "Lacivert dolap", "tint": { "kitchen": { "body": "#2e3b52", "top": "#d9d4cb" }, "bowl": { "bowl": "#e6e1d8" } }, "room": { "wall": "#e4e7ea" } }
+ ]
+}

@@ -1,0 +1,52 @@
+{
+ "name": "Spor salonu",
+ "background": "#e9edf1",
+ "room": {
+  "w": 8.0, "d": 6.5, "h": 3.2,
+  "floor": { "tex": "rubber_tiles", "tile": 1.0 },
+  "wall": { "tex": "painted_plaster_wall", "tile": 3, "tint": "#dcdcd8" },
+  "ceiling": { "color": "#efefed" },
+  "openings": [
+   { "wall": "w", "type": "window", "x": -1.5, "w": 1.2, "h": 1.5, "sill": 1.0 },
+   { "wall": "w", "type": "window", "x": 0.0, "w": 1.2, "h": 1.5, "sill": 1.0 },
+   { "wall": "w", "type": "window", "x": 1.5, "w": 1.2, "h": 1.5, "sill": 1.0 },
+   { "wall": "e", "type": "door", "x": 2.3, "w": 1.0 }
+  ]
+ },
+ "lights": { "env": 0.7, "sun": 1.8, "sunPos": [-7, 6, 2], "hemi": 0.4,
+  "points": [ { "pos": [-1.0, 3.0, -1.0], "color": "#f4f6ff", "power": 3.5, "dist": 6 },
+              { "pos": [2.0, 3.0, 0.8], "color": "#f4f6ff", "power": 3.5, "dist": 6 } ] },
+ "props": [
+  { "id": "wall_mirror", "tag": "gear", "pos": [-1.25, 0.3, -3.235] },
+  { "id": "wall_mirror", "tag": "gear", "pos": [1.15, 0.3, -3.235] },
+  { "id": "dumbbell_rack", "tag": "gear", "pos": [-0.4, 0, -2.85] },
+  { "id": "power_rack", "tag": "gear", "pos": [2.75, 0, -2.2] },
+  { "id": "plate_tree", "tag": "gear", "pos": [3.5, 0, 0.0], "rot": -90 },
+  { "id": "weight_bench", "tag": "gear", "pos": [-1.6, 0, -0.9] },
+  { "id": "dumbbell", "tag": "gear", "pos": [-1.15, 0, -0.35], "rot": 30 },
+  { "id": "treadmill", "tag": "gear", "pos": [-3.0, 0, 0.3], "rot": -90 },
+  { "id": "treadmill", "tag": "gear", "pos": [-3.0, 0, 1.4], "rot": -90 },
+  { "id": "yoga_mat", "tag": "mat", "pos": [1.0, 0, 1.4], "rot": 90 },
+  { "id": "yoga_mat", "tag": "mat", "pos": [1.0, 0, 2.2], "rot": 90 },
+  { "id": "mat_roll", "tag": "mat", "pos": [2.4, 0, 2.7] },
+  { "id": "kettlebell", "tag": "gear", "pos": [0.2, 0, 0.5] },
+  { "id": "kettlebell", "tag": "gear", "pos": [0.5, 0, 0.5] },
+  { "id": "kettlebell", "tag": "gear", "pos": [0.8, 0, 0.5], "scale": 1.15 }
+ ],
+ "marks": {
+  "bench": { "type": "sit", "pos": [-1.6, 0.44, -0.9], "rot": 90 },
+  "coach": { "type": "stand", "pos": [-0.55, 0, -0.7], "rot": -100 },
+  "mat": { "type": "stand", "pos": [1.0, 0, 1.4], "rot": 0 },
+  "rack": { "type": "stand", "pos": [2.75, 0, -1.1], "rot": 180 }
+ },
+ "cast": [
+  { "char": "rb_f17", "mark": "bench", "clip": "sit_talk" },
+  { "char": "rb_m04", "mark": "coach", "clip": "stand_talk" }
+ ],
+ "camera": { "pos": [3.0, 2.2, 5.4], "target": [-0.5, 1.0, -1.0], "fov": 50 },
+ "variants": [
+  { "name": "Siyah ekipman", "tint": { "gear": { "frame": "#1e1f22", "pad": "#1a1a1a", "plates": "#151515", "iron": "#1a1a1c" }, "mat": { "mat": "#3e7f86" } }, "room": { "wall": "#dcdcd8" } },
+  { "name": "Kırmızı vurgu", "tint": { "gear": { "frame": "#2a2b2e", "pad": "#8e2a24", "plates": "#7a1f1a", "iron": "#26262a" }, "mat": { "mat": "#8a4f7d" } }, "room": { "wall": "#e7e3dc" } },
+  { "name": "Açık gri", "tint": { "gear": { "frame": "#c9ccd0", "pad": "#2f4a6b", "plates": "#2b2d31", "iron": "#3a3c40" }, "mat": { "mat": "#4f6b4a" } }, "room": { "wall": "#d5dde3" } }
+ ]
+}

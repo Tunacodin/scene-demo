@@ -1,0 +1,110 @@
+{
+ "id": "a2_u1_milk",
+ "title": "How much milk do we need?",
+ "duration": 36.772,
+ "learner": "leo",
+ "segments": [
+  {
+   "type": "intro",
+   "t0": 0,
+   "t1": 1.8
+  },
+  {
+   "type": "line",
+   "i": 0,
+   "who": "anna",
+   "text": "We need to go shopping. Can you help me with the list?",
+   "tr": "Alışverişe gitmemiz lazım. Listeye yardım eder misin?",
+   "t0": 1.8,
+   "t1": 5.212
+  },
+  {
+   "type": "turn",
+   "i": 1,
+   "who": "leo",
+   "text": "Sure. How much milk do we need?",
+   "tr": "Tabii. Ne kadar süte ihtiyacımız var?",
+   "t0": 5.662,
+   "t1": 10.262,
+   "loop": [
+    5.662,
+    9.662
+   ],
+   "audio": "l1.mp3"
+  },
+  {
+   "type": "line",
+   "i": 2,
+   "who": "anna",
+   "text": "Two bottles. We don't have any milk.",
+   "tr": "İki şişe. Hiç sütümüz yok.",
+   "t0": 10.412,
+   "t1": 13.7
+  },
+  {
+   "type": "turn",
+   "i": 3,
+   "who": "leo",
+   "text": "Okay. And how many eggs?",
+   "tr": "Tamam. Peki kaç yumurta?",
+   "t0": 14.15,
+   "t1": 18.75,
+   "loop": [
+    14.15,
+    18.15
+   ],
+   "audio": "l3.mp3"
+  },
+  {
+   "type": "line",
+   "i": 4,
+   "who": "anna",
+   "text": "Twelve eggs, please. I want to make a cake.",
+   "tr": "On iki yumurta lütfen. Kek yapmak istiyorum.",
+   "t0": 18.9,
+   "t1": 22.228
+  },
+  {
+   "type": "turn",
+   "i": 5,
+   "who": "leo",
+   "text": "A cake? How much sugar do we have?",
+   "tr": "Kek mi? Ne kadar şekerimiz var?",
+   "t0": 22.678,
+   "t1": 27.278,
+   "loop": [
+    22.678,
+    26.678
+   ],
+   "audio": "l5.mp3"
+  },
+  {
+   "type": "line",
+   "i": 6,
+   "who": "anna",
+   "text": "Not much. Let's buy one bag.",
+   "tr": "Pek yok. Bir paket alalım.",
+   "t0": 27.428,
+   "t1": 30.322
+  },
+  {
+   "type": "turn",
+   "i": 7,
+   "who": "leo",
+   "text": "Great. Milk, eggs and sugar. Let's go!",
+   "tr": "Harika. Süt, yumurta ve şeker. Hadi gidelim!",
+   "t0": 30.772,
+   "t1": 35.372,
+   "loop": [
+    30.772,
+    34.772
+   ],
+   "audio": "l7.mp3"
+  },
+  {
+   "type": "outro",
+   "t0": 35.372,
+   "t1": 36.772
+  }
+ ]
+}
